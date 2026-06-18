@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 import subprocess
 import sys
 import time
@@ -15,16 +16,23 @@ SCRIPTS = [
 ]
 
 
-def run_script(script_path: Path, project_root: Path) -> int:
+def run_script(script_path: Path, working_dir: Path, repo_root: Path) -> int:
     print(f"\n=== Running {script_path.name} ===")
     start = time.perf_counter()
 
+    env = os.environ.copy()
+    existing_pythonpath = env.get("PYTHONPATH", "")
+    env["PYTHONPATH"] = (
+        f"{repo_root}{os.pathsep}{existing_pythonpath}" if existing_pythonpath else str(repo_root)
+    )
+
     result = subprocess.run(
         [sys.executable, str(script_path)],
-        cwd=project_root,
+        cwd=working_dir,
         capture_output=True,
         text=True,
         check=False,
+        env=env,
     )
 
     elapsed = time.perf_counter() - start
@@ -41,18 +49,19 @@ def run_script(script_path: Path, project_root: Path) -> int:
 
 
 def main() -> int:
-    project_root = Path(__file__).resolve().parent
+    scripts_root = Path(__file__).resolve().parent
+    repo_root = scripts_root.parents[1]
     failures = []
 
     for script_name in SCRIPTS:
-        script_path = project_root / script_name
+        script_path = scripts_root / script_name
 
         if not script_path.exists():
             print(f"\n=== Skipping {script_name}: file not found ===")
             failures.append((script_name, "missing"))
             continue
 
-        exit_code = run_script(script_path, project_root)
+        exit_code = run_script(script_path, scripts_root, repo_root)
         if exit_code != 0:
             failures.append((script_name, exit_code))
 
