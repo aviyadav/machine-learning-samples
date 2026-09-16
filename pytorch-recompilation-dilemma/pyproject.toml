@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "recompilation-dilemma"
+version = "1.0.0"
+description = "Reproduce the PyTorch recompilation dilemma and measure six mitigations against one latency budget"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=2.2.6",
+    "torch>=2.4",
+]
+classifiers = [
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+[project.optional-dependencies]
+dev = ["ruff"]
+
+[project.scripts]
+recompilation-dilemma = "recompilation_dilemma.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["recompilation_dilemma*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["F", "E9", "B", "SIM", "UP", "I"]

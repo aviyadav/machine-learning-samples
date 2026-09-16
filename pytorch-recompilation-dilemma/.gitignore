@@ -1,0 +1,14 @@
+# Virtual environments
+.venv/
+venv/
+
+# Inductor / Triton artifacts and the packaged AOT model
+.rd-cache/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.ruff_cache/

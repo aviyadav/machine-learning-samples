@@ -1,0 +1,17 @@
+# PyTorch is the only hard requirement.
+#
+# On Linux, `pip install torch` already gives you a CUDA-enabled build.  Use the
+# CPU-only index if the machine has no NVIDIA GPU (or you want a much smaller
+# download):
+#
+#   pip install -r requirements.txt
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu
+#
+# On Windows, PyPI ships the CPU build; the CUDA build comes from the same index:
+#
+#   pip install torch --index-url https://download.pytorch.org/whl/cu124
+torch>=2.4
+
+# Not required by torch, but its absence makes some Dynamo code paths emit
+# "numpy is not available" warnings.
+numpy>=1.24
